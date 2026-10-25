@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Earnings Dashboard | Personal Earnings</title>
+<meta name="description" content="View my personal earning progress, daily earnings, withdrawal history and results.">
+<meta name="robots" content="index, follow">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:Inter,Arial,Helvetica,sans-serif;background:#f4f7fb;color:#111827;line-height:1.6}
+:root{--primary:#2563eb;--primary-dark:#1d4ed8;--gray:#64748b;--dark:#0f172a;--white:#fff;--border:#e5e7eb;--shadow:0 15px 40px rgba(15,23,42,.08)}
+.navbar{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-container{max-width:1150px;margin:auto;padding:15px 20px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:22px;font-weight:900}.logo span{color:var(--primary)}
+.nav-links{display:flex;gap:25px;list-style:none}.nav-links a{text-decoration:none;color:#475569;font-weight:600;font-size:14px}
+.hero{background:radial-gradient(circle at top right,rgba(59,130,246,.35),transparent 35%),linear-gradient(135deg,#0f172a,#1d4ed8);color:white;padding:90px 20px 120px;text-align:center}
+.hero-content{max-width:850px;margin:auto}.badge{display:inline-block;padding:8px 16px;border-radius:50px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);font-size:13px;margin-bottom:20px}
+.hero h1{font-size:clamp(38px,6vw,64px);line-height:1.1;margin-bottom:20px}.hero h1 span{color:#93c5fd}.hero p{max-width:700px;margin:auto;color:#dbeafe;font-size:18px}
+.hero-buttons{margin-top:30px;display:flex;justify-content:center;gap:15px;flex-wrap:wrap}.btn{display:inline-block;text-decoration:none;padding:13px 24px;border-radius:10px;font-weight:700}.btn-primary{background:white;color:var(--primary)}.btn-outline{color:white;border:1px solid rgba(255,255,255,.35)}
+.container{width:min(1150px,92%);margin:auto}
+.stats{margin-top:-55px;position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.card{background:white;border-radius:20px;box-shadow:var(--shadow);border:1px solid rgba(226,232,240,.8)}
+.stat-card{padding:25px 20px;text-align:center}.stat-icon{width:55px;height:55px;margin:0 auto 14px;border-radius:15px;display:flex;align-items:center;justify-content:center;background:#eff6ff;font-size:25px}
+.stat-card h3{color:var(--gray);font-size:12px;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}.amount{font-size:28px;font-weight:900}
+section{padding:75px 0}.section-heading{text-align:center;margin-bottom:35px}.section-heading h2{font-size:36px;margin-bottom:8px}.section-heading p{color:var(--gray)}
+.dashboard-grid{display:grid;grid-template-columns:1.5fr .8fr;gap:25px}.chart-card{padding:30px}.chart{height:320px;display:flex;align-items:flex-end;gap:14px;padding:30px 10px 40px;border-bottom:1px solid var(--border)}
+.bar-wrapper{height:100%;flex:1;display:flex;align-items:flex-end;justify-content:center}.bar{width:70%;max-width:55px;min-height:8px;border-radius:9px 9px 2px 2px;background:linear-gradient(to top,#2563eb,#60a5fa);position:relative;transition:.3s}.bar:hover{transform:translateY(-5px)}
+.bar-value{position:absolute;top:-25px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:700;white-space:nowrap}.bar-label{position:absolute;bottom:-32px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--gray);white-space:nowrap}
+.summary-card{padding:25px}.summary-item{padding:18px;border-radius:14px;background:#f8fafc;margin-bottom:14px}.summary-item:last-child{margin-bottom:0}.summary-item span{color:var(--gray);font-size:13px}.summary-item strong{display:block;font-size:25px;margin-top:4px}
+.table-card{padding:10px 20px;overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:650px}th,td{padding:18px 15px;text-align:left;border-bottom:1px solid var(--border)}th{font-size:12px;color:var(--gray);text-transform:uppercase}td{font-size:14px}.status{display:inline-block;background:#dcfce7;color:#166534;padding:5px 12px;border-radius:50px;font-size:11px;font-weight:800}
+.about-card{max-width:850px;margin:auto;padding:40px;text-align:center}.about-card h2{font-size:32px;margin-bottom:15px}.about-card p{color:var(--gray)}.notice{margin-top:25px;padding:15px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:13px}
+.cta{background:linear-gradient(135deg,#eff6ff,#dbeafe)}.cta-box{text-align:center;max-width:750px;margin:auto}.cta-box h2{font-size:34px;margin-bottom:12px}.cta-box p{color:var(--gray);margin-bottom:25px}.cta-btn{display:inline-block;background:var(--primary);color:white;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:800}
+footer{background:var(--dark);color:#94a3b8;padding:35px 20px;text-align:center}footer strong{color:white}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.dashboard-grid{grid-template-columns:1fr}}
+@media(max-width:600px){
+body{overflow-x:hidden}
+.nav-container{padding:12px 16px}
+.logo{font-size:19px}
+.hero{padding:55px 16px 90px}
+.hero-buttons .btn{width:100%;max-width:320px}
+.stats{gap:12px}
+.stat-card{padding:20px 12px}
+.amount{font-size:24px}
+section{padding:55px 0}
+.container{width:min(100% - 24px,1150px)}
+.chart-card{overflow:hidden}
+.table-card{-webkit-overflow-scrolling:touch}
+.nav-links{display:none}.hero{padding:70px 18px 100px}.hero h1{font-size:40px}.hero p{font-size:16px}.stats{grid-template-columns:1fr}.section-heading h2{font-size:29px}.chart-card{padding:20px 10px}.chart{gap:5px;height:270px}.bar{width:80%}.bar-value{font-size:9px}.about-card{padding:25px 20px}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}.card{animation:fadeUp .6s ease both}
+</style>
+</head>
+<body>
+<nav class="navbar"><div class="nav-container"><div class="logo">My<span>Dashboard</span></div><ul class="nav-links"><li><a href="#earnings">Earnings</a></li><li><a href="#withdrawals">Withdrawals</a></li><li><a href="#about">About</a></li></ul></div></nav>
+
+<header class="hero"><div class="hero-content"><div class="badge">✓ Personal Earnings Dashboard</div><h1>My <span>Earning Journey</span></h1><p>Track my personal earnings, daily progress and withdrawal history in one simple dashboard.</p><div class="hero-buttons"><a href="#earnings" class="btn btn-primary">View My Earnings</a><a href="#withdrawals" class="btn btn-outline">Withdrawal History</a></div></div></header>
+
+<main>
+<div class="container"><div class="stats">
+<div class="card stat-card"><div class="stat-icon">💰</div><h3>Total Earnings</h3><div class="amount" id="totalEarnings">₹0</div></div>
+<div class="card stat-card"><div class="stat-icon">📈</div><h3>Today's Earnings</h3><div class="amount" id="todayEarnings">₹0</div></div>
+<div class="card stat-card"><div class="stat-icon">💸</div><h3>Total Withdrawn</h3><div class="amount" id="totalWithdrawn">₹0</div></div>
+<div class="card stat-card"><div class="stat-icon">🏦</div><h3>Latest Withdrawal</h3><div class="amount" id="latestWithdrawal">₹0</div></div>
+</div></div>
+
+<section id="earnings"><div class="container"><div class="section-heading"><h2>Daily Earnings</h2><p>My recent earning activity</p></div><div class="dashboard-grid">
+<div class="card chart-card"><div class="chart" id="chart"></div></div>
+<div class="card summary-card">
+<div class="summary-item"><span>Average Daily Earnings</span><strong id="averageEarnings">₹0</strong></div>
+<div class="summary-item"><span>Best Earning Day</span><strong id="bestDay">₹0</strong></div>
+<div class="summary-item"><span>Earning Days</span><strong id="earningDays">0</strong></div>
+</div>
+</div></div></section>
+
+<section id="withdrawals"><div class="container"><div class="section-heading"><h2>Withdrawal History</h2><p>My personal withdrawal records</p></div><div class="card table-card"><table><thead><tr><th>Date</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead><tbody id="withdrawalTable"></tbody></table></div></div></section>
+
+<section id="about"><div class="container"><div class="card about-card"><h2>About My Results</h2><p>This page showcases my personal earning progress and withdrawal history. The figures displayed here are my own records and are provided for informational purposes.</p><div class="notice">⚠️ Personal results only. Earnings can vary depending on individual circumstances, activity, time invested and other factors. Past results do not guarantee future earnings.</div></div></div></section>
+
+<section class="cta"><div class="container"><div class="cta-box"><h2>Follow My Progress</h2><p>Check back to see my latest personal earning and withdrawal updates.</p><a href="#earnings" class="cta-btn">View Earnings</a></div></div></section>
+</main>
+
+<footer><p>© 2026 <strong>My Results</strong>. All rights reserved.</p><p style="margin-top:8px;font-size:12px;">Personal earnings showcase.</p></footer>
+
+<script>
+const DATA = {
+totalEarnings:25480,
+todayEarnings:1250,
+totalWithdrawn:18500,
+latestWithdrawal:2500,
+
+dailyEarnings:[
+{day:"Oct 19",amount:850},
+{day:"Oct 20",amount:1200},
+{day:"Oct 21",amount:980},
+{day:"Oct 22",amount:1420},
+{day:"Oct 23",amount:1100},
+{day:"Oct 24",amount:1650},
+{day:"Oct 25",amount:1250}
+],
+
+withdrawals:[
+{date:"Oct 25, 2026",amount:2500,method:"Bank Transfer",status:"Completed"},
+{date:"Oct 23, 2026",amount:1500,method:"UPI",status:"Completed"},
+{date:"Oct 21, 2026",amount:3000,method:"Bank Transfer",status:"Completed"},
+{date:"Oct 18, 2026",amount:2000,method:"UPI",status:"Completed"},
+{date:"Oct 15, 2026",amount:4500,method:"Bank Transfer",status:"Completed"}
+]
+};
+
+function money(value){return "₹"+Number(value).toLocaleString("en-IN");}
+
+document.getElementById("totalEarnings").textContent=money(DATA.totalEarnings);
+document.getElementById("todayEarnings").textContent=money(DATA.todayEarnings);
+document.getElementById("totalWithdrawn").textContent=money(DATA.totalWithdrawn);
+document.getElementById("latestWithdrawal").textContent=money(DATA.latestWithdrawal);
+
+const chart=document.getElementById("chart");
+const maxAmount=Math.max(...DATA.dailyEarnings.map(item=>item.amount));
+
+DATA.dailyEarnings.forEach(item=>{
+const wrapper=document.createElement("div");
+wrapper.className="bar-wrapper";
+const bar=document.createElement("div");
+bar.className="bar";
+bar.style.height=Math.max((item.amount/maxAmount)*100,8)+"%";
+const value=document.createElement("span");
+value.className="bar-value";
+value.textContent=money(item.amount);
+const label=document.createElement("span");
+label.className="bar-label";
+label.textContent=item.day;
+bar.appendChild(value);
+bar.appendChild(label);
+wrapper.appendChild(bar);
+chart.appendChild(wrapper);
+});
+
+const totalDaily=DATA.dailyEarnings.reduce((sum,item)=>sum+item.amount,0);
+document.getElementById("averageEarnings").textContent=money(Math.round(totalDaily/DATA.dailyEarnings.length));
+const best=Math.max(...DATA.dailyEarnings.map(item=>item.amount));
+document.getElementById("bestDay").textContent=money(best);
+document.getElementById("earningDays").textContent=DATA.dailyEarnings.length;
+
+const table=document.getElementById("withdrawalTable");
+DATA.withdrawals.forEach(item=>{
+const row=document.createElement("tr");
+row.innerHTML=`<td>${item.date}</td><td><strong>${money(item.amount)}</strong></td><td>${item.method}</td><td><span class="status">${item.status}</span></td>`;
+table.appendChild(row);
+});
+</script>
+</body>
+</html>
